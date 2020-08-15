@@ -1,8 +1,10 @@
 import React, {useState, useEffect} from 'react'
+import * as yup from 'yup'
 import axios from 'axios'
 
+
 const blankForm = {
-    name: ' ',
+    name: '',
     size: '',
     hasPepperoni: false,
     hasXCheese: false,
@@ -18,15 +20,53 @@ export default function PizzaForm () {
     //console.log('form', formState, 'btn', btnDisabled, 'error', errorState)
 
     //change handler
-    const handleChanges = (event) => {  
+    const handleChanges = (event) => { 
+        event.persist() 
+        validateChange(event)
         setFormState({...formState, [event.target.name]:event.target.type === 'checkbox' ? event.target.checked : event.target.value})
         console.log('input changed!', formState)
     }
 
+    //submit
+    const submitOrder = (event) => {
+        event.preventDefault()
+        console.log('data submitted!', formState)
+    }
+
+    //form schema
+    const formSchema = yup.object().shape({
+        name: yup.string().min('limit: 2'),
+        size: yup.string().oneOf(['small', 'medium', 'large'], 'Please select a size!'),
+        hasPepperoni: yup.boolean().notRequired(),
+        hasXCheese: yup.boolean().notRequired(),
+        hasAnchovy: yup.boolean().notRequired(),
+        hasPineapple: yup.boolean().notRequired(),
+        special: yup.string().notRequired()
+    })
+
+    //form validate
+    const validateChange = (event) => {
+        yup
+            .reach(formSchema, event.target.name)
+            .validate(event.target.name === event.target.value)
+            .then(valid => setErrorState({...errorState, [event.target.name]: ''}))
+            .catch(error => {
+                console.log('Please fix these validation errors:', errorState)
+                setErrorState({...errorState, [event.target.name]:error.errors[0]})
+            })
+    }
+
+//check entire form validity
+    useEffect(() => {
+        console.log('useEffect called')
+        formSchema.isValid(formState)
+            .then(validity => setBtnDisabled(validity))
+    }, [formState])
+
     return (
         <section>
             <h2>Order Pizza!</h2>
-            <form>
+            <form onSubmit={ submitOrder }>
                 <label htmlFor='name'>Name:
                 {/* must be at least 2 characters */}
                     <input id='name' name='name' type='text' onChange={ handleChanges } value={ formState.name }/>
