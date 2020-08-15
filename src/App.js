@@ -1,6 +1,7 @@
 import React from "react";
 import {Switch, Link, Route} from 'react-router-dom'
 import PizzaHome from './PizzaHome'
+import PizzaForm from "./PizzaForm";
 
 const App = () => {
   return (
@@ -12,11 +13,7 @@ const App = () => {
       </header>
       <section>
       <Switch>
-        <Route path='/order'>
-          <div>
-            <h1>Hello this is order!</h1>
-          </div>
-        </Route>
+        <Route path='/order' component={ PizzaForm } />
         <Route path='/' component={ PizzaHome }/>
 
       </Switch>
