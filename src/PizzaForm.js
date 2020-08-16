@@ -17,7 +17,6 @@ export default function PizzaForm () {
     const [formState, setFormState] = useState({...blankForm})
     const [btnDisabled, setBtnDisabled] = useState(true)
     const [errorState, setErrorState] = useState({...blankForm})
-    const [passState, setPassState] = useState({...blankForm})
     //console.log('form', formState, 'btn', btnDisabled, 'error', errorState)
 
 
@@ -43,10 +42,9 @@ export default function PizzaForm () {
     const validateChange = (event) => {
         yup
             .reach(formSchema, event.target.name)
-            .validate(event.target.value)
+            .validate(event.target.type === 'checkbox' ? event.target.checked : event.target.value)
             .then(valid => {
                 setErrorState({...errorState, [event.target.name]: ''})
-                console.log(`passState after change with ${event.target.name}`, passState)
             })
             .catch(error => {
                 setErrorState({...errorState, [event.target.name]:error.errors[0]})
@@ -56,15 +54,13 @@ export default function PizzaForm () {
 
 //change handler
     const handleChanges = (event) => { 
-        event.persist() 
-        validateChange(event)
+        event.persist()     
         setFormState({...formState, [event.target.name]:event.target.type === 'checkbox' ? event.target.checked : event.target.value})
-        console.log('input changed!', formState)
+        validateChange(event)
     }
 
 //check entire form validity
     useEffect(() => {
-        console.log('useEffect called')
         formSchema.isValid(formState)
             .then(validity => setBtnDisabled(!validity))
     }, [formState])
@@ -96,36 +92,40 @@ export default function PizzaForm () {
                 </label>
                 <section>
                     <p>Toppings:</p>
-                    <label htmlFor='hasXCheese'>Extra Cheese
+                    <label htmlFor='hasXCheese'>
                         <input id='hasXCheese' 
                             name='hasXCheese' 
                             type='checkbox'  
                             checked={ formState.hasXCheese } 
                             onChange={ handleChanges }/>
+                        Extra Cheese
                     </label>
-                    <label htmlFor='hasPepperoni'>Pepperoni
+                    <label htmlFor='hasPepperoni'>
                         <input id='hasPepperoni' 
                             name='hasPepperoni' 
                             type='checkbox' 
                             checked={ formState.hasPepperoni }  
                             onChange={ handleChanges }/>
+                        Pepperoni
                     </label>
-                    <label htmlFor='hasPineapple'>Pineapple
+                    <label htmlFor='hasPineapple'>
                         <input id='hasPineapple'
                             name='hasPineapple' 
                             type='checkbox' 
                             checked={ formState.hasPineapple } 
                             onChange={ handleChanges }/>
+                        Pineapple
                     </label>   
-                    <label htmlFor='hasAnchovy'>Anchovies
+                    <label htmlFor='hasAnchovy'>
                         <input id='hasAnchovy' 
                             name='hasAnchovy' 
                             type='checkbox' 
                             checked={ formState.hasAnchovy } 
                             onChange={ handleChanges }/>
+                        Anchovies
                         </label>   
                 </section>
-                <label htmlFor='special'>Special Instructions:
+                <label htmlFor='special'>Special Instructions: <br />
                     <textarea id='special' 
                         name='special' 
                         value={ formState.special } 

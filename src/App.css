@@ -1,3 +1,23 @@
+form {
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  border: 1px solid silver;
+  width: 50%;
+  min-height: 300px;
+}
+
+input, select {
+  margin-left: 10px;
+}
+
+form button {
+  padding: 25px;
+  max-width: 200px;
+}
+
 .errorMsg {
   margin: 10px;
   background: crimson;
