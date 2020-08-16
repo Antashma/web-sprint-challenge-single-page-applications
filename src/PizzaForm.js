@@ -17,21 +17,19 @@ export default function PizzaForm () {
     const [formState, setFormState] = useState({...blankForm})
     const [btnDisabled, setBtnDisabled] = useState(true)
     const [errorState, setErrorState] = useState({...blankForm})
-    //console.log('form', formState, 'btn', btnDisabled, 'error', errorState)
-
-
 
     //submit
     const submitOrder = (event) => {
         event.preventDefault()
-        console.log('data submitted!', formState)
+        console.log('data submitted!', formState) //show what was submitted
+        setFormState({...blankForm}) //clear form
     }
 
     //form schema
     const formSchema = yup.object().shape({
-        name: yup.string().min('2').required('Please enter your name!'),
-        size: yup.string().oneOf(['small', 'medium', 'large'], 'You must select a size!'),
-        hasPepperoni: yup.boolean().notRequired(),
+        name: yup.string().min('2'), //must be min of 2 characters to pass
+        size: yup.string().oneOf(['small', 'medium', 'large'], 'You must select a size!'), //one must be selected
+        hasPepperoni: yup.boolean().notRequired(), //⏬ topping and special instructions can be unaltered 
         hasXCheese: yup.boolean().notRequired(),
         hasAnchovy: yup.boolean().notRequired(),
         hasPineapple: yup.boolean().notRequired(),
@@ -70,19 +68,21 @@ export default function PizzaForm () {
             <h2>Order Pizza!</h2>
             <form onSubmit={ submitOrder }>
                 <label htmlFor='name'>Name:
-                {/* must be at least 2 characters */}
                     <input id='name' 
                         name='name' 
                         type='text' 
+                        placeholder='ex. Mikey'
                         onChange={ handleChanges } 
-                        value={ formState.name }/>
+                        value={ formState.name }
+                        data-cy='name'/>
                     {errorState.name.length > 0 ? <p className='errorMsg'>{errorState.name}</p> : null}
                 </label>
                 <label htmlFor='size'>Pizza Size:
                     <select id='size' 
                         name='size' 
                         value={formState.size} 
-                        onChange={ handleChanges }>
+                        onChange={ handleChanges }
+                        data-cy='size'>
                         <option value=''>-- Select a Size --</option>
                         <option value='small'>Small - 14in</option>
                         <option value='medium'>Medium - 16in</option>
@@ -97,7 +97,8 @@ export default function PizzaForm () {
                             name='hasXCheese' 
                             type='checkbox'  
                             checked={ formState.hasXCheese } 
-                            onChange={ handleChanges }/>
+                            onChange={ handleChanges }
+                            data-cy='xcheese'/>
                         Extra Cheese
                     </label>
                     <label htmlFor='hasPepperoni'>
@@ -105,7 +106,8 @@ export default function PizzaForm () {
                             name='hasPepperoni' 
                             type='checkbox' 
                             checked={ formState.hasPepperoni }  
-                            onChange={ handleChanges }/>
+                            onChange={ handleChanges }
+                            data-cy='pepperoni'/>
                         Pepperoni
                     </label>
                     <label htmlFor='hasPineapple'>
@@ -113,7 +115,8 @@ export default function PizzaForm () {
                             name='hasPineapple' 
                             type='checkbox' 
                             checked={ formState.hasPineapple } 
-                            onChange={ handleChanges }/>
+                            onChange={ handleChanges }
+                            data-cy='pineapple'/>
                         Pineapple
                     </label>   
                     <label htmlFor='hasAnchovy'>
@@ -121,15 +124,18 @@ export default function PizzaForm () {
                             name='hasAnchovy' 
                             type='checkbox' 
                             checked={ formState.hasAnchovy } 
-                            onChange={ handleChanges }/>
+                            onChange={ handleChanges }
+                            data-cy='anchovy'/>
                         Anchovies
                         </label>   
                 </section>
                 <label htmlFor='special'>Special Instructions: <br />
                     <textarea id='special' 
                         name='special' 
+                        placeholder='ex. Please leave by sewer...'
                         value={ formState.special } 
-                        onChange={ handleChanges }/>
+                        onChange={ handleChanges }
+                        data-cy='special'/>
                 </label>
                 <button disabled={ btnDisabled }>Place Order</button>
             </form>
