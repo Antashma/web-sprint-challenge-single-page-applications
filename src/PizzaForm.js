@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import * as yup from 'yup'
 import axios from 'axios'
-
+import OnTheWay from './OnTheWay'
 
 const blankForm = {
     name: '',
@@ -17,12 +17,20 @@ export default function PizzaForm () {
     const [formState, setFormState] = useState({...blankForm})
     const [btnDisabled, setBtnDisabled] = useState(true)
     const [errorState, setErrorState] = useState({...blankForm})
+    const [orderState, setOrderState] = useState([])
 
     //submit
     const submitOrder = (event) => {
         event.preventDefault()
-        console.log('data submitted!', formState) //show what was submitted
-        setFormState({...blankForm}) //clear form
+        axios.post('https://reqres.in/api/users', formState)
+            .then(sucess => {
+                console.log('⭐ Successfully posted form data: ', sucess.data)
+                setOrderState([...orderState, {formState}])
+                setFormState({...blankForm}) //clear form
+            })
+            .catch(failure => {
+                console.log('⛔failed to post form data. please see error: ', failure)
+            })
     }
 
     //form schema
@@ -137,8 +145,9 @@ export default function PizzaForm () {
                         onChange={ handleChanges }
                         data-cy='special'/>
                 </label>
-                <button disabled={ btnDisabled }>Place Order</button>
+                <button disabled={ btnDisabled } data-cy='submitBtn'>Add to Order</button>
             </form>
+            <OnTheWay data = { orderState }/>
         </section>
     )
 }

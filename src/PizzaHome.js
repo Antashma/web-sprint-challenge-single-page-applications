@@ -7,7 +7,7 @@ export default function PizzaHome() {
         <div>
             <h2>Pizza Home</h2>
             
-            <img src= { pizzaImg } alt='delicious pizza' />
+            <img src= { pizzaImg } alt='Delicious pizza!' />
             <Link to='/order'>Order Now!</Link>
         </div>
     )
